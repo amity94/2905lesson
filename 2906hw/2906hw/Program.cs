@@ -11,37 +11,28 @@ namespace _2906hw
     {
         static void Main(string[] args)
         {
-            Thread t = new Thread(multiplynumbers);
-            Thread t2 = new Thread(ThreadWork);
-            t.Start();
-            t2.Start();
-                
-        }
-
-        private static void ThreadWork()
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                Thread.Sleep(1000);
-                Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId}: {i}");
-            }
-        }
-
-        private static void multiplynumbers()
-        {
             Random r = new Random();
             int a = r.Next(9);
             int b = r.Next(9);
-            Console.WriteLine($"{a} * {b}");
+            Console.WriteLine($"{a} * {b} = ?");
 
-            int input = 0;
-            while(input != a*b)
+            Thread t = new Thread(() =>
             {
-                Console.WriteLine("input answer");
-                input = int.Parse(Console.ReadLine());
-            }
-            if(input == a*b)
-                Console.WriteLine("You Are Great");
+                for (int i = 5; i >= 0; i--)
+                {
+                    Console.WriteLine($"{i} seconds left");
+                    Thread.Sleep(1000);
+                }
+            });
+            t.Start();
+
+            int result = int.Parse(Console.ReadLine());
+
+            if(t.ThreadState != ThreadState.Stopped && result == a*b)
+                Console.WriteLine("You Are Great!");
+            else
+                Console.WriteLine("Booooooo!");
+            t.Abort();
         }
     }
 }
